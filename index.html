@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontiers Language School Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(#6a11cb, #2575fc);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .screen {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px 0;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .screen {
+                padding: 20px;
+            }
+
+            #start-screen h1 {
+                font-size: 1.5rem;
+            }
+
+            #start-screen p {
+                font-size: 0.9rem;
+            }
+
+            #registration-form .form-group input,
+            #registration-form .form-group select {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Device Warning Message */
+        .device-warning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #ff6f61;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            font-size: 1rem;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-in-out;
+        }
+
+        .device-warning.hidden {
+            display: none;
+        }
+
+        /* Start Screen */
+        #start-screen .logo img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        #start-screen h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #4A90E2;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        #start-screen p {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        #start-screen button {
+            background: #4A90E2;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        #start-screen button:hover {
+            background: #FF6F61;
+        }
+
+        /* Registration Form */
+        #registration-form .form-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #4A90E2;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        #registration-form .form-header p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        #registration-form .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        #registration-form .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        #registration-form .form-group input,
+        #registration-form .form-group select,
+        #registration-form .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        #registration-form .form-group input:focus,
+        #registration-form .form-group select:focus {
+            border-color: #4A90E2;
+            outline: none;
+        }
+
+        #registration-form button {
+            background: #4A90E2;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        #registration-form button:hover {
+            background: #FF6F61;
+        }
+
+        .image-upload-note {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Go Back Button */
+        .go-back-button {
+            background: #4A90E2;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .go-back-button:hover {
+            background: #FF6F61;
+        }
+
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            animation: zoomIn 0.5s ease-in-out;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        body::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background: #4A90E2;
+            border-radius: 10px;
+        }
+
+        body::-webkit-scrollbar-thumb:hover {
+            background: #FF6F61;
+        }
+
+        /* Cookie Consent Banner */
+        .cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        .cookie-consent button {
+            background: #4A90E2;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .cookie-consent button:hover {
+            background: #FF6F61;
+        }
+
+        /* Image Resizing */
+        img {
+            width: 150px; /* Set a consistent width */
+            height: 150px; /* Set a consistent height */
+            object-fit: cover; /* Ensure images maintain aspect ratio */
+            border-radius: 10px; /* Optional: Add rounded corners */
+        }
+
+        .lightbox img {
+            width: auto; /* Reset width for lightbox */
+            height: auto; /* Reset height for lightbox */
+        }
+    </style>
+</head>
+<body>
+    <!-- Device Warning Message -->
+    <div class="device-warning hidden">
+        You are currently using a phone or tablet. For the best experience, please switch to desktop mode.
+    </div>
+
+    <!-- Cookie Consent Banner -->
+    <div class="cookie-consent hidden">
+        This website uses cookies to ensure you get the best experience. 
+        <button onclick="acceptCookies()">Accept</button>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen">
+        <div class="logo">
+            <img src="logo.png" alt="School Logo">
+        </div>
+        <h1>Frontiers Language School</h1>
+        <p>Principal: Yosser Zaid</p>
+        <button onclick="showRegistrationForm()">Start Registration <i class="fas fa-arrow-right"></i></button>
+        <button onclick="showPhotos()">View School Students <i class="fas fa-images"></i></button>
+        <button onclick="showSchoolInfo()">Show School <i class="fas fa-school"></i></button>
+    </div>
+
+    <!-- Registration Form -->
+    <div id="registration-form" class="screen hidden">
+        <div class="form-header">
+            <h2>Registration Form</h2>
+            <p>Please fill in the details below to register.</p>
+        </div>
+        <form id="registration" action="mailto:islamfarag007@gmail.com" method="post" enctype="text/plain">
+            <div class="form-group">
+                <label for="school-name">School Name:</label>
+                <input type="text" id="school-name" name="school-name" value="Frontiers Language School" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="class">Class:</label>
+                <select id="class" name="class" required>
+                    <option value="">Select Class</option>
+                    <option value="KG1">KG 1</option>
+                    <option value="KG2">KG 2</option>
+                    <option value="Grade1">Grade 1</option>
+                    <option value="Grade2">Grade 2</option>
+                    <option value="Grade3">Grade 3</option>
+                    <option value="Grade4">Grade 4</option>
+                    <option value="Grade5">Grade 5</option>
+                    <option value="Grade6">Grade 6</option>
+                    <option value="Grade7">Grade 7</option>
+                    <option value="Grade8">Grade 8</option>
+                    <option value="Grade9">Grade 9</option>
+                    <option value="Grade10">Grade 10</option>
+                    <option value="Grade11">Grade 11</option>
+                    <option value="Grade12">Grade 12</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="student-name">Student Name:</label>
+                <input type="text" id="student-name" name="student-name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="student-birthday">Student Birthday:</label>
+                <input type="date" id="student-birthday" name="student-birthday" required>
+            </div>
+
+            <div class="form-group">
+                <label for="student-gender">Student Gender:</label>
+                <select id="student-gender" name="student-gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="mother-name">Mother's Name:</label>
+                <input type="text" id="mother-name" name="mother-name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="father-name">Father's Name:</label>
+                <input type="text" id="father-name" name="father-name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="parents-phone">Parents' Phone Number:</label>
+                <input type="tel" id="parents-phone" name="parents-phone" required>
+            </div>
+
+            <div class="form-group">
+                <label for="student-email">Student Email Or Parent Mail:</label>
+                <input type="email" id="student-email" name="student-email">
+            </div>
+
+            <div class="form-group">
+                <label for="mother-email">Mother's Email:</label>
+                <input type="email" id="mother-email" name="mother-email">
+            </div>
+
+            <div class="form-group">
+                <label for="father-email">Father's Email:</label>
+                <input type="email" id="father-email" name="father-email">
+            </div>
+
+            <div class="form-group">
+                <label for="emergency-contact">Emergency Contact Number:</label>
+                <input type="tel" id="emergency-contact" name="emergency-contact" required>
+            </div>
+
+            <div class="form-group">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">I agree to the terms and conditions.</label>
+            </div>
+
+            <button type="submit">Submit <i class="fas fa-check"></i></button>
+        </form>
+
+        <!-- Go Back Button -->
+        <button class="go-back-button" onclick="goBack()">Go Back <i class="fas fa-arrow-left"></i></button>
+    </div>
+
+    <!-- Photo Gallery Screen -->
+    <div id="photo-screen" class="screen hidden">
+        <h2>School Photos</h2>
+        <div class="photo-gallery">
+            <h3>Top 3 Students</h3>
+            <div class="photos">
+                <img src="WhatsApp Image 2025-03-12 at 12.54.18_3352583d.jpg" alt="Top Students" onclick="openLightbox(this.src)">
+                <img src="WhatsApp Image 2025-03-12 at 12.54.18_dce6050e.jpg" alt="Top Students" onclick="openLightbox(this.src)">
+                <img src="WhatsApp Image 2025-03-12 at 12.54.19_def551f3.jpg" alt="Top Students" onclick="openLightbox(this.src)">
+                <img src="0000.jpg" alt="Top Students" onclick="openLightbox(this.src)">
+            </div>
+
+            <h3>KG Section</h3>
+            <div class="photos">
+                <img src="ggggggggggggggg.jpg" alt="KG Section" onclick="openLightbox(this.src)">
+                <img src="ggggggggggggggggggggggg.jpg" alt="KG Section" onclick="openLightbox(this.src)">
+                <img src="ggggggggggggggggggggggggggggggggggg.jpg" alt="KG Section" onclick="openLightbox(this.src)">
+            </div>
+
+            <h3>Grade & Middle Section</h3>
+            <div class="photos">
+                <img src="M2.jpg" alt="Grade & Middle Section" onclick="openLightbox(this.src)">
+                <img src="20250316_111906.jpg" alt="Grade & Middle Section" onclick="openLightbox(this.src)">
+                <img src="mi smart boardo.jpg" alt="Grade & Middle Section" onclick="openLightbox(this.src)">
+            </div>
+
+            <h3>Senior Section</h3>
+            <div class="photos">
+                <img src="20250316_105440.jpg" alt="Senior Section" onclick="openLightbox(this.src)">
+            </div>
+        </div>
+        <button class="go-back-button" onclick="goBack()">Go Back <i class="fas fa-arrow-left"></i></button>
+    </div>
+
+    <!-- School Info Screen -->
+    <div id="school-info-screen" class="screen hidden">
+        <h2>School Information</h2>
+        <div class="school-info">
+            <h3>School Background</h3>
+            <img src="bg.jpg" alt="School Background" onclick="openLightbox(this.src)">
+            <img src="2i013.jpg" alt="School Background" onclick="openLightbox(this.src)">
+            <p>Frontiers Language School is dedicated to providing quality education and fostering a nurturing environment for students.</p>
+
+            <h3>Classrooms</h3>
+            <img src="M2.jpg" alt="Classrooms" onclick="openLightbox(this.src)">
+            <p>Our classrooms are equipped with modern facilities to enhance the learning experience.</p>
+
+            <h3>Break Time</h3>
+            <img src="4to12.jpg" alt="Break Time" onclick="openLightbox(this.src)">
+            <p>Students enjoy a well-deserved break time with various recreational activities.</p>
+        </div>
+        <button class="go-back-button" onclick="goBack()">Go Back <i class="fas fa-arrow-left"></i></button>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" onclick="closeLightbox()">
+        <img src="" alt="Lightbox Image">
+        <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+    </div>
+
+    <script>
+        // JavaScript for functionality
+        function showRegistrationForm() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('registration-form').classList.remove('hidden');
+        }
+
+        function showPhotos() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('photo-screen').classList.remove('hidden');
+        }
+
+        function showSchoolInfo() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('school-info-screen').classList.remove('hidden');
+        }
+
+        function goBack() {
+            document.getElementById('registration-form').classList.add('hidden');
+            document.getElementById('photo-screen').classList.add('hidden');
+            document.getElementById('school-info-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+
+        function openLightbox(imageSrc) {
+            const lightbox = document.querySelector('.lightbox');
+            const lightboxImg = lightbox.querySelector('img');
+            lightboxImg.src = imageSrc;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            const lightbox = document.querySelector('.lightbox');
+            lightbox.classList.remove('active');
+        }
+
+        // Cookie Consent
+        function acceptCookies() {
+            document.querySelector('.cookie-consent').classList.add('hidden');
+            localStorage.setItem('cookiesAccepted', 'true');
+        }
+
+        if (localStorage.getItem('cookiesAccepted')) {
+            document.querySelector('.cookie-consent').classList.add('hidden');
+        } else {
+            document.querySelector('.cookie-consent').classList.remove('hidden');
+        }
+
+        // Form Validation
+        const form = document.getElementById('registration');
+        form.addEventListener('submit', function (event) {
+            const phone = document.getElementById('parents-phone').value;
+            const email = document.getElementById('student-email').value;
+
+            if (!/^\d{11}$/.test(phone)) {
+                alert('Please enter a valid 11-digit phone number.');
+                event.preventDefault();
+            }
+
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert('Please enter a valid email address.');
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
